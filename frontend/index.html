@@ -6,40 +6,48 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Controle de Investimentos</h1>
+    <header>
+        <h1>Controle de Investimentos</h1>
+        <div class="resumo-topo">
+            <div id="valor-carteira" class="valor-total">R$ 0,00</div>
+            <div class="grafico-container">
+                <canvas id="graficoAlocacao"></canvas>
+            </div>
+        </div>
+    </header>
+    
 
-    <section>
-        <h2>Adicionar Ativo</h2>
-        <input type="text" id="nome" placeholder="Nome (ex.: PETR4)">
-        <input type="text" id="tipo" placeholder="Tipo (acao, fii...)">
-        <input type="number" id="preco" placeholder="Preço Atual">
-        <button onclick="adicionarAtivo()">Adicionar</button>
-    </section>
+    <div class="acoes-principais">
+        <button class="btn-novo" onclick="abrirModal('modalAtivo')">Novo Ativo</button>
+        <button class="btn-novo" onclick="abrirModal('modalAporte')">Novo Aporte</button>
+    </div>
 
-    <section>
-        <h2>Adicionar Aporte</h2>
-        <input type="number" id="ativo_id" placeholder="ID do ativo">
-        <input type="number" id="quantidade" placeholder="Quantidade">
-        <input type="number" id="preco_unitario" placeholder="Preço Pago">
-        <input type="date" id="data">
-        <button onclick="adicionarAporte()">Adicionar</button>
-    </section>
+    <div id="modalAtivo" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal('modalAtivo')">&times;</span>
+            <h2>Adicionar Ativo</h2>
+            <input type="text" id="nome" placeholder="Nome (ex.: PETR4)">
+            <input type="text" id="tipo" placeholder="Tipo (acao, fii...)">
+            <input type="number" id="preco" placeholder="Preço Atual">
+            <button onclick="adicionarAtivo()">Adicionar Ativo</button>
+        </div>
+    </div>
 
-    <section>
-        <h2>Valor total da Carteira</h2>
-        <div id="valor-carteira"></div>
-    </section>
+    <div id="modalAporte" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal('modalAporte')">&times;</span>
+            <h2>Adicionar Aporte</h2>
+            <input type="number" id="ativo_id" placeholder="ID do ativo">
+            <input type="number" id="quantidade" placeholder="Quantidade">
+            <input type="number" id="preco_unitario" placeholder="Preço Pago">
+            <input type="date" id="data">
+            <button onclick="adicionarAporte()">Adicionar Aporte</button>
+        </div>
+    </div>
 
-    <section>
-        <h2>Ativos</h2>
-        <div id="lista-ativos"></div>
-    </section>
-
-    <section>
-      <h2>Alocação da Carteira</h2>
-      <div class="grafico-container">
-        <canvas id="graficoAlocacao"></canvas>
-      </div>
+    <section class="container-ativos">
+        <h2>Meus Ativos</h2>
+        <div id="lista-ativos" class="grid-ativos"></div>
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

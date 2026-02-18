@@ -2,6 +2,22 @@ const API_URL = "http://localhost:3000";
 
 let grafico; //variavel global
 
+//Funções para controlar modais
+function abrirModal(id) {
+    document.getElementById(id).style.display = "block";
+}
+
+function fecharModal(id) {
+    document.getElementById(id).style.display = "none";
+}
+
+//Fechar modal se clicar fora da caixa branca
+window.onclick = function(event) {
+    if (event.target.className === 'modal') {
+        event.target.style.display = "none";
+    }
+}
+
 async function carregarGrafico() {
     const response = await fetch(`${API_URL}/ativos`);
     const ativos = await response.json();
@@ -55,6 +71,7 @@ async function adicionarAtivo() {
         })
     });
 
+    fecharModal('modalAtivos');
     carregarAtivos();
 }
 
@@ -75,6 +92,7 @@ async function adicionarAporte() {
         })
     });
     
+    fecharModal('modalAporte');
     carregarAtivos();
 }
 
@@ -126,20 +144,22 @@ async function carregarAtivos() {
             : 0;
 
         const div = document.createElement("div");
+        div.className = "card-ativo";
         div.innerHTML = `
-            <hr>
-            <strong>${resumo.nome}</strong> (${resumo.tipo})<br>
-            Quantidade: ${resumo.quantidade_total}<br>
-            Investido: R$ ${resumo.total_investido}<br>
-            Valor Atual: R$ ${resumo.valor_atual}<br>
-            Percentual da Carteira: ${percentual.toFixed(2)}%<br>
-            Lucro/Prejuízo: R$ ${resumo.lucro_prejuizo}<br><br>
+            <strong>${resumo.nome}</strong> <span class="tag-tipo">${resumo.tipo}</span><br>
+            <p>Quantidade: <b>${resumo.quantidade_total}</b></p>
+            <p>Investido: <b>R$ ${resumo.total_investido}</b><p>
+            <p>Valor Atual: <b>R$ ${resumo.valor_atual}</b></p>
+            <p>Percentual da Carteira: <b>${percentual.toFixed(2)}%</b></p>
+            <p>Lucro/Prejuízo: <span style="color: ${resumo.lucro_prejuizo >= 0 ? 'green' : 'red'}">
+                R$ ${resumo.lucro_prejuizo}
+            </span></p>
 
             Novo preço:
             <input type="number" id="preco-${ativo.id}" placeholder="Novo preço">
             <button onclick="atualizarPreco(${ativo.id})">Atualizar</button>
 
-            <button onclick="deletarAtivo(${ativo.id})">Deletar Ativo</button>
+            <button style="background:#e74c3c; color:white; margin-top:10px" onclick="deletarAtivo(${ativo.id})">Deletar Ativo</button>
         `;
         container.appendChild(div);
     }
