@@ -9,18 +9,30 @@
     <header>
         <h1>Controle de Investimentos</h1>
         <div class="resumo-topo">
-            <div id="valor-carteira" class="valor-total">R$ 0,00</div>
+            <div class ="coluna-info">
+                <div class="mini-cards">
+                    <div class="mini-card">
+                        <span>Lucro/Prejuízo</span>
+                        <strong id="lucro-total" class="positivo">R$ 0,00</strong>
+                    </div>
+                    <div class="mini-card">
+                        <span>Ativos Totais</span>
+                        <strong id="qtd-ativos">0</strong>
+                    </div>
+                </div>
+
+                <div id="valor-carteira" class="valor-total">R$ 0,00</div>
+
+                <div class="acoes-principais">
+                    <button class="btn-novo btn-ativo" onclick="abrirModal('modalAtivo')">Novo Ativo</button>
+                    <button class="btn-novo btn-aporte" onclick="abrirModal('modalAporte')">Novo Aporte</button>
+                </div>
+            </div>
             <div class="grafico-container">
                 <canvas id="graficoAlocacao"></canvas>
             </div>
         </div>
     </header>
-    
-
-    <div class="acoes-principais">
-        <button class="btn-novo" onclick="abrirModal('modalAtivo')">Novo Ativo</button>
-        <button class="btn-novo" onclick="abrirModal('modalAporte')">Novo Aporte</button>
-    </div>
 
     <div id="modalAtivo" class="modal">
         <div class="modal-content">

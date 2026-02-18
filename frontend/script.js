@@ -11,6 +11,21 @@ function fecharModal(id) {
     document.getElementById(id).style.display = "none";
 }
 
+//Atualizar mini-cards do header
+function atualizarMiniCards(lucro, qtd) {
+    const elementoLucro = document.getElementById("lucro-total");
+    const elementoQtd = document.getElementById("qtd-ativos");
+
+    elementoQtd.innerHTML = qtd;
+    elementoLucro.innerHTML = lucro.toLocaleString('pt-BR', { 
+        style: 'currency',
+        currency: 'BRL' 
+    });
+
+    //Muda a cor do lucro para verde ou vermelho
+    elementoLucro.className = lucro >= 0 ? "positivo" : "negativo";
+}
+
 //Fechar modal se clicar fora da caixa branca
 window.onclick = function(event) {
     if (event.target.className === 'modal') {
@@ -99,8 +114,13 @@ async function adicionarAporte() {
 async function carregarCarteira() {
     const response = await fetch(`${API_URL}/carteira`);
     const data = await response.json();
-    document.getElementById("valor-carteira").innerHTML =
-    `R$ ${data.valor_total.toFixed(2)}`;
+
+    //Formata o numero para o padrao brasileiro
+    const valorFormatado = data.valor_total.toLocaleString('pt-BR', { 
+        style: 'currency',
+        currency: 'BRL' 
+    });
+    document.getElementById("valor-carteira").innerHTML = valorFormatado;
 }
 
 async function atualizarPreco(id) {
@@ -132,9 +152,16 @@ async function carregarAtivos() {
     const container = document.getElementById("lista-ativos");
     container.innerHTML = "";
 
+    //Variáveis para acumular totais do cabeçalho
+    let lucroTotalAcumulado = 0;
+    let contadorAtivos = ativos.length;
+
     for (let ativo of ativos) {
         const resumoResponse = await fetch(`${API_URL}/resumo/${ativo.id}`);
         const resumo = await resumoResponse.json();
+
+        // Somando o lucro/prejuízo de cada ativo ao total
+        lucroTotalAcumulado += Number(resumo.lucro_prejuizo);
 
         const carteiraResponse = await fetch(`${API_URL}/carteira`);
         const carteira = await carteiraResponse.json();
@@ -157,13 +184,17 @@ async function carregarAtivos() {
 
             Novo preço:
             <input type="number" id="preco-${ativo.id}" placeholder="Novo preço">
-            <button onclick="atualizarPreco(${ativo.id})">Atualizar</button>
-
-            <button style="background:#e74c3c; color:white; margin-top:10px" onclick="deletarAtivo(${ativo.id})">Deletar Ativo</button>
+            <div class="card-acoes">
+                <button onclick="atualizarPreco(${ativo.id})">Atualizar</button>
+                <button class="btn-deletar" onclick="deletarAtivo(${ativo.id})">Deletar</button>
+            </div>
         `;
         container.appendChild(div);
     }
     
+    //Atualiza os mini-cards no header
+    atualizarMiniCards(lucroTotalAcumulado, contadorAtivos);
+
     carregarCarteira();
     carregarGrafico();
 }
